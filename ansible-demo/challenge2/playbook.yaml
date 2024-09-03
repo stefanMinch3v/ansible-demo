@@ -1,0 +1,38 @@
+- hosts: web
+  remote_user: root
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: Update all Linux packages to their latest version
+      dnf:
+        name: "*"
+        state: latest
+
+    - name: Install Apache
+      dnf: 
+        name: httpd
+        state: installed
+
+    - name: Create The HTML File
+      shell: echo "Hello From The Ansible Challenge" > /var/www/html/index.html
+      args:
+        executable: /bin/bash
+      notify:
+        - Reload Apache
+
+    - name: Public IP
+      shell:
+        cmd: dig +short myip.opendns.com @resolver1.opendns.com
+      register: myip
+    - debug: var=myip.stdout_lines
+
+    # - name: Uninstall Apache
+    #   dnf: 
+    #     name: httpd
+    #     state: removed
+  handlers:
+    - name: Reload Apache
+      service:
+        name: httpd
+        state: reloaded

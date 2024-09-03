@@ -1,0 +1,73 @@
+Ansible setup:
+1. Install VM cuz it works only under linux
+2. Install ansible inside the linux
+3. Create aws ec2 instance with SSH key downloaded (.pem file) + http and https opened ports, ansible will need them. The ssh port can be restricted only to your IP address, put any only for testing purposes
+4. Move the pem file into the VM and set the command: chmod 400 "name of the pem file"
+
+Ansible verbose level:
+-vv -vvv -vvvv -vvvvv
+
+To test if the connection ansible-ec2 is working type:
+ansible web (have 1 host called web) -i (for inventory file) aws.ini (or yaml depends what is your format) -m (for modules) ping
+ansible web -i aws.ini -m ping
+A success should be returned back!
+Another way of doing it is using ping module from ansible
+
+
+Ansible always goes in the PAST TENSE mostly, so look at the docs
+
+To run playbook config:
+ansible-playbook -i aws.ini (our config for a server) playbook.yaml (a playbook config)
+
+Using shared variable file: (vars.yaml inside the file demo yaml) if the vars.yaml is not specified inside the file demo yaml
+ansible-playbook -e "@vars.yaml" var_file_demo.yaml
+"e" is for extra variables (that are not declared inside the yaml file)
+Another way of doing it directly from the CLI is
+ansible-playbook -e "basic_var=CLI" var_file_demo.yaml
+
+Ansible Roles provide a structured way to organize tasks, templates, files, and variables
+Initialize roles:
+ansible-galaxy init "roleName"
+for cleanup
+ansible-galaxy init cleaner same way but modify and move the remove logic in the cleaner folder
+
+To install roles from ansible-galaxy, use the following:
+ansible-galaxy install --roles-path . (means install in the current directory) -r requirements.yaml
+then in the requirements yaml: we specify just the name of the role
+roles:
+  - name: geerlingguy.docker
+  - name: geerlingguy.apache
+
+Role is an individual thing whereas collections is multiple roles
+For Collections:
+ansible-galaxy collection install -p . -r requirements.yaml
+
+For managing windows we need to connect to our windows machine and make sure to install winrm.
+For AWS we we upload the ssh key in order to decrypt and get the password for administrator user,
+follow the docs - https://docs.ansible.com/ansible/latest/os_guide/windows_setup.html   winrmsetup should be enough
+
+To encrypt file with ansible we do:
+ansible-vault encrypt "filename"
+Descript:
+ansible-vault decrypt "filename"
+View in terminal:
+ansible-vault view "filename"
+Both actions will require you to create a password and use it for decryption
+When is encrypted we can require pass to apply:
+ansible-playbook -i aws.yaml --ask-vault-pass playbook.yaml
+To change the pass:
+ansible-vault rekey "filename"
+
+There are 3 options to limit access to hosts:
+- --limit from the console
+- specify the host in the yaml file 
+- {{ HOSTS }} and pass it via console: -e "HOSTS=test.com"
+
+Dry run:
+: --check
+: with difference use --check --diff
+
+Ansible-later can validate your yaml files
+
+https://www.udemy.com/course/ansible-masterclass
+(wrap 9 training)

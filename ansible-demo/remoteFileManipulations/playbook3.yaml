@@ -1,0 +1,14 @@
+- hosts: web
+  remote_user: root
+  become: yes
+  vars:
+    remotefile: "/proc/cpuinfo"
+  tasks:
+  - name: Slurp get info
+    ansible.builtin.slurp:
+      src: "{{ remotefile }}"
+    register: slurpfile
+
+  - name: Print file info
+    ansible.builtin.debug:
+      msg: "{{ slurpfile['content'] | b64decode }}"

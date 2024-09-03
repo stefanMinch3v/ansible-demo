@@ -1,0 +1,9 @@
+- hosts: localhost
+  vars:
+    courses:
+      - ansible
+      - terraform
+  tasks:
+  - name: Display Value
+    debug:
+      msg: "{{ courses [0] }}"

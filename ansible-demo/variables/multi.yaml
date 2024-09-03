@@ -1,0 +1,19 @@
+- hosts: web
+  remote_user: root
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    packages:
+      - httpd 
+      - nano
+  tasks:
+  - name: Install Software
+    dnf:
+      name: "{{ item }}"
+      state: latest
+    loop: "{{ packages }}"
+  - name: Remove Software
+    dnf:
+      name: "{{ item }}"
+      state: absent
+    loop: "{{ packages }}"

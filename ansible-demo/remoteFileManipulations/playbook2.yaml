@@ -1,0 +1,8 @@
+- hosts: web
+  remote_user: root
+  become: yes
+  tasks:
+  - name: Copy to remote server
+    ansible.builtin.copy:
+      src: text.txt
+      dest: /home/ec2-user/text.txt

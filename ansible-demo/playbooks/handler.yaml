@@ -1,0 +1,35 @@
+- hosts: web
+  remote_user: root
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+  - name: Install Apache
+    ansible.builtin.dnf:
+      name: httpd
+      state: installed
+    notify:
+      - Restart Apache
+
+  - name: Install nano
+    ansible.builtin.dnf:
+      name: nano
+      state: installed
+    notify:
+      - Restart Apache
+
+  - name: Remove Apache
+    ansible.builtin.dnf:
+      name: httpd
+      state: removed
+
+  - name: Remove nano
+    ansible.builtin.dnf:
+      name: nano
+      state: removed
+
+  handlers:
+    - name: Restart Apache
+      service:
+        name: httpd
+        state: restarted

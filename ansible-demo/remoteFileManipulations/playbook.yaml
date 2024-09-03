@@ -1,0 +1,11 @@
+- hosts: web
+  remote_user: root
+  become: yes
+  vars:
+    log_file: "/var/log/dnf.log"
+    dump_dir: "logs"
+  tasks:
+  - name: Pull remote messages
+    ansible.builtin.fetch:
+      src: "{{ log_file }}"
+      dest: "{{ dump_dir }}"

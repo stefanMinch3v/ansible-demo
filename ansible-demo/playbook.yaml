@@ -1,0 +1,39 @@
+- hosts: web
+  remote_user: root
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+  - name: Install Apache
+    ansible.builtin.dnf:
+      name: httpd
+      state: installed
+
+  - name: Install Nginx
+    ansible.builtin.dnf:
+      name: nginx
+      state: installed
+
+  - name: Pause 5 secs
+    ansible.builtin.pause:
+      seconds: 5
+
+  - name : Check if nano is installed
+    shell:
+      cmd: nano --version
+
+  - name: Remove Apache
+    ansible.builtin.dnf: 
+      name: httpd
+      state: removed
+
+  - name: Remove Nginx
+    ansible.builtin.dnf: 
+      name: nginx
+      state: removed
+
+  - name: Reboot host
+    ansible.builtin.reboot:
+      pre_reboot_delay: 5
+      post_reboot_delay: 10
+      test_command: "whoami"

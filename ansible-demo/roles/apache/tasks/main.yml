@@ -1,0 +1,20 @@
+---
+- name: Update All Packages
+  dnf:
+    name: '*'
+    state: latest
+- name: Install Apache
+  dnf: 
+    name: httpd
+    state: installed
+- name: Create The HTML File
+  shell: echo "Hello From The Ansible Challenge" > /var/www/html/index.html
+  args:
+    executable: /bin/bash
+  notify:
+    - Reload Apache
+- name: Public IP
+  shell:
+    cmd: dig +short myip.opendns.com @resolver1.opendns.com
+  register: myip
+- debug: var=myip.stdout_lines

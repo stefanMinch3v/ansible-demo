@@ -1,0 +1,6 @@
+roles:
+  - name: geerlingguy.docker #https://galaxy.ansible.com/ui/standalone/roles/geerlingguy/docker/
+  - name: geerlingguy.apache #https://galaxy.ansible.com/ui/standalone/roles/geerlingguy/apache/
+
+collections:
+  - name: geerlingguy.k8s
